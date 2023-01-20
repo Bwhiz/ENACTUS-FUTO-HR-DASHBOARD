@@ -10,8 +10,10 @@ st.set_page_config(
     layout = 'wide'  
 )
 
-# with open('style.css') as f:
-#     st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
+st.title("Enactus-FUTO HR Dashboard")
+
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
 
 # ------------ {connection} --------------------------
 @st.cache(allow_output_mutation=True)
@@ -24,6 +26,10 @@ conn = get_database_connection()
 def run_query(query, connection):
     df = pd.read_sql(query,connection)
     return df
+
+
+#st.markdown("<h2 style='text-align: center;'>Enactus HR Dashboard </h2>", unsafe_allow_html=True)
+
 # --------------------------------------------------------------
 sheet_url = st.secrets["public_gsheets_url"]
 data = run_query(f"""select * from "{sheet_url}";""", conn)
@@ -57,7 +63,7 @@ with kp4:
     st.plotly_chart(fig, use_container_width=True)
 
 with kp5:
-    fig = px.pie(dept_count, values = 'value', names='index', hole=.3)
+    fig = px.pie(dept_count, values = 'value', names='index', hole=.3,color_discrete_sequence=px.colors.sequential.Blues_r)
     fig.update_layout(plot_bgcolor='rgba(0, 0, 0, 0)',
     paper_bgcolor='rgba(0, 0, 0, 0)', title_text='Distribution of top 10 departments', title_x=0.5)
     st.plotly_chart(fig)
