@@ -3,3 +3,4 @@ plotly==5.8.0
 pandas==1.4.2 
 shillelagh[datasetteapi]
 shillelagh[all]
+streamlit
