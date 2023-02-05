@@ -33,9 +33,13 @@ def run_query(query, connection):
 # --------------------------------------------------------------
 sheet_url = st.secrets["public_gsheets_url"]
 data = run_query(f"""select * from "{sheet_url}";""", conn)
-#st.write(len(data))
+
+# ----------------------------------------------------------------
+list_of_execs = ['Ejelonu Benedict Ositadinma','Favour Obioha','Ikpe Bill Chibuzor ','Nzubechukwu Chinedu','Anarado Ivan','Tochukwu Chukwure','Azubuike Chioma Blessing']
 
 data['M_V'] = data['M_V'].str.replace('A member', 'Member').replace('Recruit i.e Yet to be inducted','Recruit').replace('Recruit (yet to be Inducted)','Recruit')
+data['Attendance Score'] = data['Attendance Score'].fillna(0)
+data['Project Participation score'] = data['Project Participation score'].fillna(0)
 
 kp1, kp2, kp3 = st.columns(3)
 
@@ -67,3 +71,12 @@ with kp5:
     fig.update_layout(plot_bgcolor='rgba(0, 0, 0, 0)',
     paper_bgcolor='rgba(0, 0, 0, 0)', title_text='Distribution of top 10 departments', title_x=0.5)
     st.plotly_chart(fig)
+
+st.header("")
+
+st.markdown("<h2 style='text-align: center;'>Top 10 students for the semester </h2>", unsafe_allow_html=True)
+top_students = data[['Full name','Attendance Score','Project Participation score']]
+top_students['total_score'] = top_students['Attendance Score'] + top_students['Project Participation score']
+top_students = top_students[~top_students['Full name'].isin(list_of_execs)]
+top_students = top_students.reset_index(drop=True)
+st.table(top_students.sort_values(by=['total_score','Full name'],ascending=False)['Full name'][:10].reset_index(drop=True))
