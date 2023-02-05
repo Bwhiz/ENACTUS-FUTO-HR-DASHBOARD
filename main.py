@@ -35,13 +35,13 @@ sheet_url = st.secrets["public_gsheets_url"]
 data = run_query(f"""select * from "{sheet_url}";""", conn)
 #st.write(len(data))
 
-data['member/volunteer'] = data['member/volunteer'].str.replace('A member', 'Member').replace('Recruit i.e Yet to be inducted','Recruit').replace('Recruit (yet to be Inducted)','Recruit')
+data['M_V'] = data['M_V'].str.replace('A member', 'Member').replace('Recruit i.e Yet to be inducted','Recruit').replace('Recruit (yet to be Inducted)','Recruit')
 
 kp1, kp2, kp3 = st.columns(3)
 
 no_members = len(data)
 perc_of_females = round(len(data[data['Gender'] == 'Female'])/len(data)*100,2)
-perc_of_members = round(len(data[data['member/volunteer'] == 'Member'])/len(data)*100,2)
+perc_of_members = round(len(data[data['M_V'] == 'Member'])/len(data)*100,2)
 
 kp1.metric(label = 'Total counts of Students', value = no_members)
 kp2.metric(label = 'Percentage of Female members', value = '{:0.2f}%'.format(perc_of_females))
